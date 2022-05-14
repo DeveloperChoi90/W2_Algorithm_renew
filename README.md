@@ -1,1 +1,1 @@
-# W2_Algorithm_renew
+# B반 16조 Algorithm스터디
