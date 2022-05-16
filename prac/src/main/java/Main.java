@@ -83,7 +83,7 @@ public class Main {
 
         // problem31
         Solution31 sol = new Solution31();
-        int[] arr = {1,1,3,3,0,1,1};
+        int[] arr = {1,1};
         System.out.println(sol.solution(arr));
     }
 }
@@ -129,26 +129,41 @@ class Solution33 {
     }
 }
 
+class Solution32 {
+    public int[] solution(int[] numbers) {
+        Set<Integer> set = new HashSet<>();
+
+        for(int i=0; i<numbers.length; i++) {
+            for(int j=i+1; j<numbers.length; j++) {
+                set.add(numbers[i] + numbers[j]);
+            }
+        }
+
+        return set.stream().sorted().mapToInt(Integer::intValue).toArray();
+    }
+}
+
 
 class Solution31 {
     public int[] solution(int []arr) {
-        int[] ans = new int[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            if(i != arr.length - 1 ){
-                if(arr[i] != arr[i+1]) {
-                    ans[i] = arr[i];
+        List<Integer> ans = new ArrayList<>();
+        ans.add(arr[0]);
+        for (int i = 1; i < arr.length; i++) {
+            if(i < arr.length - 1){
+                if(arr[i] != arr[i-1]) {
+                    ans.add(arr[i]);
                 }
             }else {
-                if(arr[i] != ans[i-1]) {
-                    ans[i] = arr[i];
+                if(arr[i] != ans.get(ans.size()-1)) {
+                    ans.add(arr[i]);
                 }
             }
         }
-        List<Integer> tmp = new ArrayList<>();
-        for (int i = 0; i < ans.length; i++) {
-            if(ans[i] != 0) tmp.add(ans[i]);
+        int[] answer = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            answer[i] = ans.get(i);
         }
-        return tmp.stream().mapToInt(i->i).toArray();
+        return answer;
     }
 }
 
