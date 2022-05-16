@@ -1,6 +1,13 @@
 import javax.swing.*;
+import java.security.spec.RSAOtherPrimeInfo;
 import java.util.*;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 
 // (100~91점 : A등급 , 90점~81점 : B등급 , 80점~71점 : C등급 , 그 외의 점수 : F등급)
 
@@ -48,14 +55,295 @@ public class Main {
         Solution17 sol = new Solution17();
         System.out.println(sol.solution(s));*/
 
-        // problem20
+/*        // problem20
         String[] participant = {"mislav", "stanko", "mislav", "ana"};
         String[] completion = {"stanko", "ana", "mislav"};
         Solution20 sol = new Solution20();
-        System.out.println(sol.solution(participant,completion));
+        System.out.println(sol.solution(participant,completion));*/
 
+/*        // problem24
+        long n = 121212;
+        Solution24 sol = new Solution24();
+        System.out.println(sol.solution(n));*/
+
+/*        // problem27
+        int n = 1;  // 6, 16, 626331
+        Solution27 sol = new Solution27();
+        System.out.println(sol.solution(n));
+//        System.out.println(Integer.MAX_VALUE + 1);*/
+
+/*        // problem30
+        int[][] sizes = {{60, 50}, {30, 70}, {60, 30}, {80, 40}};
+        Solution30 sol = new Solution30();
+        System.out.println(sol.solution(sizes));*/
+
+/*        // problem29
+        Solution29 sol = new Solution29();
+        System.out.println(sol.solution(45));*/
+
+        // problem31
+        Solution31 sol = new Solution31();
+        int[] arr = {1,1};
+        System.out.println(sol.solution(arr));
     }
 }
+
+// TODO: 2022/05/16
+class Solution33 {
+    public int[] solution(int[] lottos, int[] win_nums) {
+        List<Integer> right_nums = new ArrayList<>();
+        Map<Integer, Integer> win = new HashMap<>();
+        // dictionary 로또 등수
+        for(int i = 0; i < win_nums.length + 1; i++){
+            if(i == 0 || i == 1) win.put(i, 6);
+            else win.put(i, 7 - i);
+        }
+        //내로또에 알아볼수 없는 숫자 카운트
+        int cnt = 0;
+        for(int num : lottos){
+            if(num == 0) cnt++;
+        }
+
+        // 내숫자와 로또번호 비교
+        for(int i = 0; i < win_nums.length; i++){
+            for(int j = 0; j < win_nums.length; j++){
+                if(lottos[i] == win_nums[j]) right_nums.add(lottos[i]);
+            }
+        }
+
+        int[] ans = {0, 0};
+        if(right_nums.size() == 0 && Arrays.stream(lottos).max().getAsInt() == 0){   // 다 모르는 숫자일 경우
+            ans[0] = win.get(6);
+            ans[1] = win.get(0);
+        }
+        else if(right_nums.size() == 0){        // 다 틀린경우
+            ans[0] = win.get(0);
+            ans[1] = win.get(0);
+        }
+        else {
+            ans[0] = win.get(cnt + right_nums.size()); // 최대: 알아볼수 없는 숫자 갯수 + 맞은 숫자 갯수
+            ans[1] = win.get(right_nums.size());    // 최소 : 맞은 숫자 갯수
+        }
+
+        return ans;
+    }
+}
+
+class Solution32 {
+    public int[] solution(int[] numbers) {
+        Set<Integer> set = new HashSet<>();
+
+        for(int i=0; i<numbers.length; i++) {
+            for(int j=i+1; j<numbers.length; j++) {
+                set.add(numbers[i] + numbers[j]);
+            }
+        }
+
+        return set.stream().sorted().mapToInt(Integer::intValue).toArray();
+    }
+}
+
+
+class Solution31 {
+    public int[] solution(int []arr) {
+        List<Integer> ans = new ArrayList<>();
+        ans.add(arr[0]);
+        for (int i = 1; i < arr.length; i++) {
+            if(i < arr.length - 1){
+                if(arr[i] != arr[i-1]) {
+                    ans.add(arr[i]);
+                }
+            }else {
+                if(arr[i] != ans.get(ans.size()-1)) {
+                    ans.add(arr[i]);
+                }
+            }
+        }
+        int[] answer = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            answer[i] = ans.get(i);
+        }
+        return answer;
+    }
+}
+
+
+/**/
+class Solution30 {
+    public int solution(int[][] sizes) {
+        List<Integer> w = new ArrayList<>();
+        List<Integer> h = new ArrayList<>();
+
+        for (int[] size : sizes) {
+            if(size[0] > size[1]){
+                w.add(size[1]);
+                h.add(size[0]);
+            }
+            else {
+                w.add(size[0]);
+                h.add(size[1]);
+            }
+        }
+        int max_w = Collections.max(w);
+        int max_h = Collections.max(h);
+
+        return max_w * max_h;
+    }
+}
+
+class Solution29 {
+    public int solution(int n) {
+        StringBuilder three_notation = new StringBuilder();
+        int tmp = n;
+        while(true){
+            if(tmp >= 3){
+                three_notation.append(Integer.toString(tmp % 3));
+                tmp /= 3;
+            }else {
+                three_notation.append(Integer.toString(tmp));
+                break;
+            }
+        }
+//        StringBuilder reverse_three_notation = new StringBuilder();
+//        for (int i = 0; i < three_notation.length(); i++) {
+//            reverse_three_notation.append(three_notation.charAt(three_notation.length() - i - 1));
+//        }
+
+//        int answer = 0;
+//        for (int i = 0; i < three_notation.length(); i++) {
+//            answer += Integer.parseInt(three_notation.substring(i,i+1)) * (int)(Math.pow(3,three_notation.length() - i - 1));
+//        }
+        return Integer.parseInt(three_notation.toString(),3);
+    }
+}
+
+
+class Solution28 {
+    public boolean solution(int x) {
+        String s = Integer.toString(x);
+        int tmp = 0;
+        for (int i = 0; i < s.length(); i++) {
+            tmp += Character.getNumericValue(s.charAt(i));
+        }
+        if(x % tmp == 0) return true;
+        return false;
+    }
+}
+
+
+/*1-1. 입력된 수가 짝수라면 2로 나눕니다.
+1-2. 입력된 수가 홀수라면 3을 곱하고 1을 더합니다.
+2. 결과로 나온 수에 같은 작업을 1이 될 때까지 반복합니다.*/
+class Solution27 {
+    static int cnt = 0;
+    public int solution(long num) { //num을 long type으로 변경한 이유 : 재귀함수를 반복하면서 stack overflow 현상이 발생하는 것을 방지하기 위해
+        long tmp = 0;
+        if(num != 1){
+            if(num%2 == 0){
+                tmp = num / 2;
+            }else {
+                tmp = 3 * num + 1;
+            }
+            cnt+=1;
+            if(tmp == 1) {
+                if(cnt > 500){
+                    return -1;
+                }else {
+                    return cnt;
+                }
+            } else {
+                if (cnt > 500) {
+                    return -1;
+                } else {
+                    return solution(tmp);
+                }
+            }
+        }else return 0;
+    }
+}
+
+
+
+class Solution26 {
+    public int[] solution(int[] arr) {
+        List<Integer> tmp = new ArrayList<>();
+        for (int val : arr) {
+            tmp.add(val);
+        }
+        tmp.remove(Collections.min(tmp));
+        if(tmp.size() == 0) return new int[] { -1 };
+        int[] answer = tmp.stream().mapToInt(i -> i).toArray();
+
+        return answer;
+    }
+}
+
+
+class Solution25 {
+    public long solution(long n) {
+        long answer = 0;
+        double tmp = Math.sqrt(n);
+        if(tmp - Math.floor(tmp)  != 0) return -1;
+        tmp = Math.pow(tmp + 1, 2);
+        answer = Double.valueOf(tmp).longValue();
+        return answer;
+    }
+}
+
+
+//함수 solution은 정수 n을 매개변수로 입력받습니다. n의 각 자릿수를 큰것부터 작은 순으로 정렬한 새로운 정수를 리턴해주세요. 예를들어 n이 118372면 873211을 리턴하면 됩니다.
+class Solution24 {
+    public long solution(long n) {
+        String num = Long.toString(n);
+        List<Integer> list_num = new ArrayList<>();
+
+        for (int i = 0; i < num.length(); i++) {
+            int tmp = 0;
+            tmp = num.charAt(i) - '0';
+            list_num.add(tmp);
+        }
+
+        int a = 0;
+        Integer b = 0;
+
+        String.valueOf(a);
+        int c = (int) b;
+
+
+        list_num.sort(Comparator.reverseOrder());
+        int[] ans = new int[list_num.size()];
+        StringBuilder tmp = new StringBuilder();
+        for (int i = 0; i < ans.length; i++) {
+            tmp.append(Integer.toString(ans[i]));
+        }
+        long answer = Long.parseLong(tmp.toString());
+        return answer;
+    }
+}
+
+class Solution23 {
+    public int[] solution(long n) {
+        String s = Long.toString(n);
+        int[] answer = new int[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            answer[i] = Character.getNumericValue(s.charAt(s.length() - i -1));
+        }
+        return answer;
+    }
+}
+
+
+class Solution22 {
+    public int solution(int n) {
+        int answer = 0;
+        String s = Integer.toString(n);
+        for (int i = 0; i < s.length(); i++) {
+            answer += Character.getNumericValue(s.charAt(i));
+        }
+        return answer;
+    }
+}
+
 
 // TODO: 2022/05/14
 class Solution21 {
