@@ -14,79 +14,199 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) {
-    //problem11
-/*        int x = 2;
-        int n = 5;
-        Solution11 sol = new Solution11();
-        System.out.println(sol.solution(x,n));*/
+//        List<Integer> test = new ArrayList<>(1000000);
+//
+//        long startTime = System.nanoTime();
+//        for (int i = 0; i < test.size(); i++) {
+//            test.set(i, 1);
+//        }
+//        long endTime = System.nanoTime();
+//
+//        System.out.println(String.format("for-loop: %dns", endTime - startTime));
+//
+//        startTime = System.nanoTime();
+//        test = test.stream().map(i -> i--).collect(Collectors.toList());
+//        endTime = System.nanoTime();
+//
+//        System.out.printf("Stream: %dns%n", endTime - startTime);
+//
+//        String da = "a b c d";
+//        char h = 'A';
+//        int j = 97;
+//        String e = " ";
+//        List<Character> t = new ArrayList<>();
+//        for (int i = 0; i < da.length(); i++) {
+//            t.add(da.charAt(i));
+//        }
+//        System.out.println(da.charAt(0) - 'A');
+//        System.out.println((int)h);
+//        System.out.println((char)j);
+//        System.out.println(e.charAt(0));
+//        System.out.println(Character.getType(t.get(3)));
 
-        // problem12
-/*        int price = 3;
-        int money = 20;
-        int cnt = 4;
-        Solution12 sol = new Solution12();
-        System.out.println(sol.solution(price,money,cnt));*/
+/*        String[] strings = {"sun", "bed", "car"};
+        Solution35_2 sol = new Solution35_2();
+        System.out.println(Arrays.toString(sol.solution(strings, 1)));*/
 
-/*        // problem18
-        String[] seoul = {"Jane", "Kim"};
-        Solution18 sol = new Solution18();
-        System.out.println(sol.solution(seoul));*/
+        int[] nums = {1,2,7,6,4};
+        Solution37 sol = new Solution37();
+        System.out.println(sol.solution(nums));
 
-
-//        // problem21
-//        String s = "hello hello";
-//        Solution21 sol = new Solution21();
-//        System.out.println(sol.solution(s));
-////        System.out.println(s.substring(3,4).toLowerCase());
-
-        // problem14
-//        int[] arr = {2, 36, 1, 3};
-//        int div = 5;
-//        Solution14 sol = new Solution14();
-//        System.out.println(sol.solution(arr,div));
-
-        // problem 16
-//        String s = "Pyy";
-//        Solution16 sol = new Solution16();
-//        System.out.println(sol.solution(s));
-
-/*        // problem17
-        String s = "1234";
-        Solution17 sol = new Solution17();
-        System.out.println(sol.solution(s));*/
-
-/*        // problem20
-        String[] participant = {"mislav", "stanko", "mislav", "ana"};
-        String[] completion = {"stanko", "ana", "mislav"};
-        Solution20 sol = new Solution20();
-        System.out.println(sol.solution(participant,completion));*/
-
-/*        // problem24
-        long n = 121212;
-        Solution24 sol = new Solution24();
-        System.out.println(sol.solution(n));*/
-
-/*        // problem27
-        int n = 1;  // 6, 16, 626331
-        Solution27 sol = new Solution27();
-        System.out.println(sol.solution(n));
-//        System.out.println(Integer.MAX_VALUE + 1);*/
-
-/*        // problem30
-        int[][] sizes = {{60, 50}, {30, 70}, {60, 30}, {80, 40}};
-        Solution30 sol = new Solution30();
-        System.out.println(sol.solution(sizes));*/
-
-/*        // problem29
-        Solution29 sol = new Solution29();
-        System.out.println(sol.solution(45));*/
-
-        // problem31
-        Solution31 sol = new Solution31();
-        int[] arr = {1,1};
-        System.out.println(sol.solution(arr));
     }
 }
+
+// TODO: 2022/05/17
+
+class Solution39 {
+    public String solution(String s, int n) {
+        char[] ans = s.toCharArray();
+        for (int i = 0; i < ans.length; i++) {
+            if((int)ans[i] > 64 && (int)ans[i] < 91) {
+                ans[i] = ((int)ans[i] + n > 90) ? (char)((int)ans[i] + n - 26) : (char)((int)ans[i] + n);
+            }
+            else if((int)ans[i] > 96 && (int)ans[i] < 123){
+                ans[i] = ((int)ans[i] + n > 122) ? (char)((int)ans[i] + n - 26) : (char)((int)ans[i] + n);
+            }
+        }
+        return String.valueOf(ans);
+    }
+}
+
+class Solution37 {
+    boolean[] prime = new boolean[2998]; // 소수 배열, false면 소수
+
+    public int solution(int[] nums) {
+        int cnt = 0;
+        int check = 0;
+        isPrime();
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            for (int j = i + 1; j < nums.length - 1; j++) {
+                for (int k = j + 1; k < nums.length; k++) {
+                    int sum = (nums[i] + nums[j] + nums[k]);
+                    check = 0;
+                    for (int l = 2; l <= (int)Math.sqrt(sum); l++) { // (int)Math.sqrt(sum) , sum/2
+                        if(sum % l == 0) {
+                            check++;
+                        }
+                    }
+                    if(check == 0) cnt++;
+
+//                    if(!prime[sum]) cnt++;
+                }
+            }
+        }
+        return cnt;
+    }
+
+    public void isPrime(){ // 미리 배열을 만들어 소수 값을 갖지않는 방에 true를 넣어놓음
+        prime[0] = prime[1] = true;
+        for (int i = 2; i < (int)Math.sqrt(prime.length); i++) {
+            if (!prime[i]){
+                for (int j = i + i; j < prime.length; j += i) {
+                    prime[j] = true;
+                }
+            }
+        }
+    }
+}
+
+/*문자열 s에 나타나는 문자를 큰것부터 작은 순으로 정렬해 새로운 문자열을 리턴하는 함수, solution을 완성해주세요.
+s는 영문 대소문자로만 구성되어 있으며, 대문자는 소문자보다 작은 것으로 간주합니다.*/
+class Solution36 {
+    public String solution(String s) {
+        StringBuilder answer = new StringBuilder();
+        Integer[] tmp = new Integer[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            tmp[i] = (int) s.charAt(i);
+        }
+        Arrays.sort(tmp, Collections.reverseOrder());
+        for (Integer ch : tmp) {
+            answer.append((char)(ch.intValue()));
+        }
+        return answer.toString();
+    }
+}
+
+/*문자열로 구성된 리스트 strings와, 정수 n이 주어졌을 때, 각 문자열의 인덱스 n번째 글자를 기준으로 오름차순 정렬하려 합니다.
+예를 들어 strings가 ["sun", "bed", "car"]이고 n이 1이면 각 단어의 인덱스 1의 문자 "u", "e", "a"로 strings를 정렬합니다.*/
+class Solution35_2 {
+    public String[] solution(String[] strings, int n) {
+        List<String> tmp = new ArrayList<>();
+        for (int i = 0; i < strings.length - 1; i++) {
+            for (int j = 1; j < strings.length; j++) {
+                if(strings[i].charAt(n) > strings[j].charAt(n)) {
+
+                }
+                else if(strings[i].charAt(n) < strings[i+1].charAt(n)) {
+                    Arrays.sort(strings, i, j, Collections.reverseOrder());
+                }
+                else {
+                    if(strings[i].compareTo(strings[j]) > 0) {
+                        Arrays.sort(strings, i, j, Collections.reverseOrder());
+                    }
+                    else {
+                        Arrays.sort(strings, i, j);
+                    }
+                }
+            }
+        }
+        return strings;
+    }
+}
+
+class Solution35 {
+    public String[] solution(String[] strings, int n) {
+        String tmp = "";
+        for (int i = 0; i < strings.length - 1; i++) {
+            for (int j = 1; j < strings.length; j++) {
+                if(strings[i].charAt(n) > strings[j].charAt(n)){
+                    tmp = strings[j];
+                    strings[j] = strings[i];
+                    strings[i] = tmp;
+                }
+                else if (strings[i].charAt(n) == strings[j].charAt(n)){
+                    if(strings[i].compareTo(strings[j]) < 0) {
+                        tmp = strings[i];
+                        strings[i] = strings[j];
+                        strings[j] = tmp;
+                    }else {
+                        tmp = strings[j];
+                        strings[j] = strings[i];
+                        strings[i] = tmp;
+                    }
+                }
+            }
+        }
+        return strings;
+    }
+}
+
+
+/* 1번 = 1, 2, 3, 4, 5 반복
+*  2번 = 2, 1, 2, 3, 2, 4, 2, 5 반복
+*  3번 = 3, 3, 1, 1, 2, 2, 4, 4, 5, 5 반복*/
+class Solution34 {
+    public int[] solution(int[] answers) {
+        int[] cnt = {0,0,0}; // 정답횟수 카운트
+        int[] st1 = {1, 2, 3, 4, 5};
+        int[] st2 = {2, 1, 2, 3, 2, 4, 2, 5};
+        int[] st3 = {3, 3, 1, 1, 2, 2, 4, 4, 5, 5};
+
+        for (int i = 0; i < answers.length; i++) {
+            cnt[0] = (answers[i] == st1[i % st1.length]) ? cnt[0] + 1 : cnt[0];
+            cnt[1] = (answers[i] == st2[i % st2.length]) ? cnt[1] + 1 : cnt[1];
+            cnt[2] = (answers[i] == st3[i % st3.length]) ? cnt[2] + 1 : cnt[2];
+        }
+        int max = Arrays.stream(cnt).max().getAsInt(); // Math.max(cnt[0], Math.max(cnt[1], cnt[2]))
+        List<Integer> answer = new ArrayList<>();
+        for (int i = 0; i < cnt.length; i++) {
+            if(max == cnt[i]) answer.add(i + 1);
+        }
+        return answer.stream().mapToInt(i->i).toArray();
+    }
+}
+
 
 // TODO: 2022/05/16
 class Solution33 {
@@ -302,13 +422,6 @@ class Solution24 {
             tmp = num.charAt(i) - '0';
             list_num.add(tmp);
         }
-
-        int a = 0;
-        Integer b = 0;
-
-        String.valueOf(a);
-        int c = (int) b;
-
 
         list_num.sort(Comparator.reverseOrder());
         int[] ans = new int[list_num.size()];
