@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.security.spec.RSAOtherPrimeInfo;
 import java.util.*;
 import java.util.Collections;
 import java.util.ArrayList;
@@ -8,8 +7,6 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
-// (100~91점 : A등급 , 90점~81점 : B등급 , 80점~71점 : C등급 , 그 외의 점수 : F등급)
 
 public class Main {
 
