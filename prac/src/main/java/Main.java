@@ -1,9 +1,14 @@
 import javax.swing.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
+import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -11,46 +16,78 @@ import java.util.stream.Stream;
 public class Main {
 
     public static void main(String[] args) {
-//        List<Integer> test = new ArrayList<>(1000000);
-//
-//        long startTime = System.nanoTime();
-//        for (int i = 0; i < test.size(); i++) {
-//            test.set(i, 1);
-//        }
-//        long endTime = System.nanoTime();
-//
-//        System.out.println(String.format("for-loop: %dns", endTime - startTime));
-//
-//        startTime = System.nanoTime();
-//        test = test.stream().map(i -> i--).collect(Collectors.toList());
-//        endTime = System.nanoTime();
-//
-//        System.out.printf("Stream: %dns%n", endTime - startTime);
-//
-//        String da = "a b c d";
-//        char h = 'A';
-//        int j = 97;
-//        String e = " ";
-//        List<Character> t = new ArrayList<>();
-//        for (int i = 0; i < da.length(); i++) {
-//            t.add(da.charAt(i));
-//        }
-//        System.out.println(da.charAt(0) - 'A');
-//        System.out.println((int)h);
-//        System.out.println((char)j);
-//        System.out.println(e.charAt(0));
-//        System.out.println(Character.getType(t.get(3)));
 
-/*        String[] strings = {"sun", "bed", "car"};
-        Solution35_2 sol = new Solution35_2();
-        System.out.println(Arrays.toString(sol.solution(strings, 1)));*/
+        // TODO: 2022/05/19
+        SolutionTest methodTest = new SolutionTest();
+        Solution method2 = new Solution();
+        String[] arr = {"coke", "water", "glass", "dog", "dog", "yogurt", "vitamin"};
+        int n = 2;
+        System.out.println("정렬을 먼저한 코드");
+        long start = System.currentTimeMillis();
+        System.out.println(Arrays.toString(methodTest.solution(arr, n)));
+        long end = System.currentTimeMillis();
+        System.out.println("SDB에서 노드생성까지의 실행시간 : " + (end - start) + "ms");
 
-        int[] nums = {1,2,7,6,4};
-        Solution37 sol = new Solution37();
-        System.out.println(sol.solution(nums));
-
+        System.out.println("------------------------------");
+        System.out.println("HashMap 사용 코드");
+        start = System.currentTimeMillis();
+        System.out.println(Arrays.toString(method2.solution(arr, n)));
+        end = System.currentTimeMillis();
+        System.out.println("SDB에서 노드생성까지의 실행시간 : " + (end - start) + "ms"); // 초단위로 시간 측정
     }
 }
+
+class SolutionTest {
+    public String[] solution(String[] arr, int n) {
+        Arrays.sort(arr, (o1, o2) -> {
+            if (o1.charAt(n) > o2.charAt(n)) return 1;
+            else if(o1.charAt(n) < o2.charAt(n)) return -1;
+            return o1.compareTo(o2);
+        });
+        /* Arrays.asList(arr)로 생성한 리스트는 고정되 element를 가지므로 add, remove 와 같이 리스트에 원소를 추가 제거 할 수 없다.
+         에러: java.lang.UnsupportedOperationException*/
+        List<String> tmp = new ArrayList<>(Arrays.asList(arr));
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            if(arr[i].equals(arr[i+1])){
+                tmp.remove(i);
+                tmp.remove(i);
+            }
+        }
+        return tmp.toArray(new String[tmp.size()]);
+    }
+}
+
+class Solution {
+    public String[] solution(String[] arr, int n) {
+        Map<String, Integer> tmp = new HashMap<>();
+        for (String s : arr) {
+            if(tmp.isEmpty()) tmp.put(s, 1);
+            else if(tmp.get(s) == null) tmp.put(s, 1);
+            else tmp.put(s, tmp.get(s) + 1);
+        }
+//        tmp.forEach((strKey, cnt) -> {
+//            for (String s : arr) {
+//                if (s.equals(strKey)) tmp.put(strKey, tmp.get(strKey) + 1);
+//            }
+//        });
+        List<String> removeArr = new ArrayList<>();
+
+        for (int i = 0; i < arr.length; i++) {
+            if(tmp.get(arr[i]) == 1) removeArr.add(arr[i]);
+        }
+
+        String[] answer = removeArr.toArray(new String[removeArr.size()]);
+
+        Arrays.sort(arr, (o1, o2) -> {
+            if (o1.charAt(n) > o2.charAt(n)) return 1;
+            else if(o1.charAt(n) < o2.charAt(n)) return -1;
+            return o1.compareTo(o2);
+        });
+        return answer;
+    }
+}
+
 
 // TODO: 2022/05/17
 
@@ -69,13 +106,21 @@ class Solution39 {
     }
 }
 
+class Solution38 {
+    public int solution(String s) {
+        int answer = 0;
+        return answer;
+    }
+}
+
+
 class Solution37 {
     boolean[] prime = new boolean[2998]; // 소수 배열, false면 소수
 
     public int solution(int[] nums) {
         int cnt = 0;
         int check = 0;
-        isPrime();
+//        isPrime();
 
         for (int i = 0; i < nums.length - 2; i++) {
             for (int j = i + 1; j < nums.length - 1; j++) {
@@ -127,25 +172,43 @@ class Solution36 {
 
 /*문자열로 구성된 리스트 strings와, 정수 n이 주어졌을 때, 각 문자열의 인덱스 n번째 글자를 기준으로 오름차순 정렬하려 합니다.
 예를 들어 strings가 ["sun", "bed", "car"]이고 n이 1이면 각 단어의 인덱스 1의 문자 "u", "e", "a"로 strings를 정렬합니다.*/
+class Solution35_3{
+    public String[] Solution(String[] strings, int n){
+        Arrays.sort(strings, (o1, o2) -> {
+            if (o1.charAt(n) > o2.charAt(n)) return 1;      // 양수로 리턴시 오름차순
+            else if(o1.charAt(n) < o2.charAt(n)) return -1;  // 음수로 리턴시 내림차순
+            return o1.compareTo(o2);
+        });
+        return strings;
+    }
+}
+
+
 class Solution35_2 {
     public String[] solution(String[] strings, int n) {
-        List<String> tmp = new ArrayList<>();
-        for (int i = 0; i < strings.length - 1; i++) {
-            for (int j = 1; j < strings.length; j++) {
+        List<String> tmp = Arrays.asList(strings);
+        String s = "";
+        for (int i = 0; i < tmp.size() - 1; i++) {
+            for (int j = 1; j < tmp.size(); j++) {
                 if(strings[i].charAt(n) > strings[j].charAt(n)) {
-
+                    s = tmp.get(i);
+                    tmp.set(i, tmp.get(j));
+                    tmp.set(j, s);
                 }
                 else if(strings[i].charAt(n) < strings[i+1].charAt(n)) {
-                    Arrays.sort(strings, i, j, Collections.reverseOrder());
+                    s = tmp.get(j);
+                    tmp.set(j, tmp.get(i));
+                    tmp.set(i, s);
                 }
-                else {
-                    if(strings[i].compareTo(strings[j]) > 0) {
-                        Arrays.sort(strings, i, j, Collections.reverseOrder());
-                    }
-                    else {
-                        Arrays.sort(strings, i, j);
-                    }
-                }
+//                else {
+//                    if(strings[i].compareTo(strings[j]) > 0) {
+//                        tmp.set(tmp.indexOf(strings[j]), strings[i]);
+//                        tmp.set(tmp.indexOf(strings[i]), strings[j]);
+//                    }else {
+//                        tmp.set(tmp.indexOf(strings[i]), strings[i]);
+//                        tmp.set(tmp.indexOf(strings[j]), strings[j]);
+//                    }
+//                }
             }
         }
         return strings;
