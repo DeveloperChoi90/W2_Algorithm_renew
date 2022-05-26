@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // TODO: 2022/05/19
+/*        // TODO: 2022/05/19
         SolutionTest methodTest = new SolutionTest();
         Solution method2 = new Solution();
         String[] arr = {"coke", "water", "glass", "dog", "dog", "yogurt", "vitamin"};
@@ -33,7 +33,12 @@ public class Main {
         start = System.currentTimeMillis();
         System.out.println(Arrays.toString(method2.solution(arr, n)));
         end = System.currentTimeMillis();
-        System.out.println("SDB에서 노드생성까지의 실행시간 : " + (end - start) + "ms"); // 초단위로 시간 측정
+        System.out.println("SDB에서 노드생성까지의 실행시간 : " + (end - start) + "ms"); // 초단위로 시간 측정*/
+
+        String s = "one4seveneight";
+        Solution38 sol = new Solution38();
+
+        System.out.println(sol);
     }
 }
 
@@ -58,6 +63,47 @@ class SolutionTest {
     }
 }
 
+// TODO: 2022/05/26
+class Solution38 {
+    public int solution(String s) {
+        int answer = 0;
+        List<Integer>ans = new ArrayList<>();
+        StringBuilder tmp = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            if ((int)s.charAt(i) < 58) {
+                ans.add(Character.getNumericValue(s.charAt(i)));
+            }
+            else {
+                tmp.append(s.charAt(i));
+                if(convertString(tmp.toString()) != 10){
+                    ans.add(convertString(tmp.toString()));
+                    tmp.delete(0, tmp.length());
+                }
+            }
+        }
+        answer = Integer.parseInt(ans.toString().replaceAll("[^0-9]",""));
+        return answer;
+    }
+
+    public int convertString(String word){
+        Map<String, Integer>numMap = new HashMap<>();
+        numMap.put("zero", 0);
+        numMap.put("one", 1);
+        numMap.put("two", 2);
+        numMap.put("three", 3);
+        numMap.put("four", 4);
+        numMap.put("five", 5);
+        numMap.put("six", 6);
+        numMap.put("seven", 7);
+        numMap.put("eight", 8);
+        numMap.put("nine", 9);
+        if(numMap.get(word) == null) return 10;
+        else return numMap.get(word);
+    }
+}
+
+
+// 알고리즘 테스트 문제 해결답안제출
 class Solution {
     public String[] solution(String[] arr, int n) {
         Map<String, Integer> tmp = new HashMap<>();
@@ -103,13 +149,6 @@ class Solution39 {
             }
         }
         return String.valueOf(ans);
-    }
-}
-
-class Solution38 {
-    public int solution(String s) {
-        int answer = 0;
-        return answer;
     }
 }
 
